@@ -28,7 +28,7 @@ injector:
   # True if you want to enable vault agent injection.
   enabled: true
 
-  replicas: 3
+  replicas: 2
 
   # Configures the port the injector should listen on
   port: 8080

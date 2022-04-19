@@ -28,7 +28,7 @@ injector:
   # True if you want to enable vault agent injection.
   enabled: true
 
-  replicas: 2
+  replicas: 1
 
   # Configures the port the injector should listen on
   port: 8080
@@ -149,9 +149,20 @@ injector:
 
   # extraEnvironmentVars is a list of extra environment variables to set in the
   # injector deployment.
-  extraEnvironmentVars: {}
-    # KUBERNETES_SERVICE_HOST: kubernetes.default.svc
+  extraEnvironmentVars:
 
+    # KUBERNETES_SERVICE_HOST: kubernetes.default.svc
+    GOOGLE_APPLICATION_CREDENTIALS: /vault/userconfig/vault-gcs/vault_gcs_key.json
+  extraVolumes:
+  - type: secret
+    name: vault-gcs
+    path: "/vault/userconfig"
+  - type: secret
+    name: vault-tls
+    path: "/etc/tls"
+
+  authDelegator:
+    enabled: true
   # Affinity Settings for injector pods
   # This can either be multi-line string or YAML matching the PodSpec's affinity field.
   # Commenting out or setting as empty the affinity variable, will allow
@@ -610,6 +621,18 @@ server:
       #   crypto_key  = "vault-helm-unseal-key"
       #}
 
+
+      storage "gcs" {
+        bucket     = "mycompany-vault-data-laith"
+        ha_enabled = "true"
+      }
+
+      seal "gcpckms" {
+        project     = "GCP_PROJECT"
+        region      = "global"
+        key_ring    = "vault-helm-unseal-kr"
+        crypto_key  = "vault-helm-unseal-key"
+      }
   # Run Vault in "HA" mode. There are no storage requirements unless audit log
   # persistence is required.  In HA mode Vault will configure itself to use Consul
   # for its storage backend.  The default configuration provided will work the Consul

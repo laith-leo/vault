@@ -628,7 +628,7 @@ server:
       }
 
       seal "gcpckms" {
-        project     = "GCP_PROJECT"
+        project     = "dotted-nature-346422"
         region      = "global"
         key_ring    = "vault-helm-unseal-kr"
         crypto_key  = "vault-helm-unseal-key"

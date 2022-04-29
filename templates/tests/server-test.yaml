@@ -1,6 +1,6 @@
 {{ template "vault.mode" . }}
 {{- if ne .mode "external" }}
-{{- if and (ne .mode "") (eq (.Values.global.enabled | toString) "true") }}
+{{- if .serverEnabled -}}
 apiVersion: v1
 kind: Pod
 metadata:
